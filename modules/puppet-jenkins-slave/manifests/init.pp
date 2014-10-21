@@ -61,11 +61,24 @@ class puppet-jenkins-slave ($maven_servers_data=[], $java_version=6) {
   User {
     managehome => true
   }
-
-  user { 'jenkins':
-    name => 'jenkins',
-    ensure => 'present',
-    groups => 'docker'
+  
+  case $lsbmajdistrelease {
+    
+    5: {
+        user { 'jenkins':
+          name => 'jenkins',
+          ensure => 'present'
+        }
+      }
+      
+    6: {
+    
+        user { 'jenkins':
+          name => 'jenkins',
+          ensure => 'present',
+          group => 'docker'
+        }
+      }
   }
 
   ssh_authorized_key { 'jenkins-radiohead-key':
@@ -87,7 +100,6 @@ class puppet-jenkins-slave ($maven_servers_data=[], $java_version=6) {
   package { 'apache-maven':
     ensure => present
   }
-
 
   if $lsbmajdistrelease == 6 {
     package { 'yum-cron':
