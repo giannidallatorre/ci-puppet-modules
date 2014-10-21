@@ -24,23 +24,38 @@
 #   }
 
 
-class puppet-jenkins-slave ($maven_servers_data=[]) {
+class puppet-jenkins-slave ($maven_servers_data=[], $java_version=6) {
 
   include puppet-emi3-release
   require puppet-docker
   require puppet-maven-repo
   
-  if ($lsbmajdistrelease == 6) {
-    require puppet-openstack-havana-repo
+  case $java_version {
+    6: { $java_package_name='java-1.6.0-openjdk-devel' $java_home='/usr/lib/jvm/java-1.6.0-openjdk.x86_64'}
+    7: { $java_package_name='java-1.7.0-openjdk-devel' $java_home='/usr/lib/jvm/java-1.7.0-openjdk.x86_64'}
+    default: { fail('Unsupported Java version: $java_version') }
   }
 
+  
+  if $lsbmajdistrelease == 6 {
+    require puppet-openstack-havana-repo
+  }
+  
   class { 'maven-settings':
     servers_data => $maven_servers_data
   }
 
   class { 'java':
     version => 'latest',
-    package => 'java-1.7.0-openjdk-devel'
+    package => $java_package_name
+  }
+  
+  file { 'java_home.sh':
+    path => '/etc/profile.d/java_home.sh',
+    owner => 'root',
+    group => 'root',
+    mode => '0644',
+    content => template('puppet-jenkins-slave/java_home.sh.erb')
   }
 
   User {
@@ -73,18 +88,30 @@ class puppet-jenkins-slave ($maven_servers_data=[]) {
     ensure => present
   }
 
-  package { 'yum-autoupdate':
-    ensure => present
+
+  if $lsbmajdistrelease == 6 {
+    package { 'yum-cron':
+      ensure => present
+    }
+
+    service { 'yum-cron':
+      require => Package['yum-cron'],
+      enable => true
+    }
   }
 
-  if ($lsbmajdistrelease == 5) {
+  if $lsbmajdistrelease == 5 {
+
+     package { 'yum-autoupdate':
+       ensure => present
+    }
     service { 'yum':
       require => Package['yum-autoupdate'],
       enable => true
     }
   }
 
-  if ($lsbmajdistrelease == 6) {
+  if $lsbmajdistrelease == 6 {
     package { 'python-novaclient':
       ensure => present
     }
