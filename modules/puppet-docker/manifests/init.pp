@@ -6,7 +6,7 @@ class puppet-docker {
   }
   
   case $lsbmajdistrelease {
-    5: { warning("docker is not available on centos/SL 5!")}
+    5: { warning("docker is not available on centos/SL 5!") }
     6: { 
   
         package { 'docker-io':
