@@ -4,4 +4,4 @@ baseurl=http://repos.fedorapeople.org/repos/openstack/openstack-havana/epel-6
 enabled=1
 skip_if_unavailable=0
 gpgcheck=0
-priority=48
+priority=1000
