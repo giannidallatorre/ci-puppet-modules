@@ -4,6 +4,12 @@ class puppet-users{
     managehome => true
   }
 
+  user { 'dmichelotto':
+    name => 'dmichelotto',
+         ensure     => 'present',
+         groups     => ['wheel']
+  }
+
   user { 'vianello':
     name => 'vianello',
          ensure     => 'present',
@@ -73,7 +79,15 @@ class puppet-users{
            type => 'ssh-dss',
            require => User['giaco']
   }
-  
+
+  ssh_authorized_key { 'dmichelotto-key':
+    ensure => 'present',
+           user => 'dmichelotto',
+           key => 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCmrIgitzjN9NZCFqJiSipzNduBAf5Vw/hgeEaVZbLwZRy3jIhd6mCDUKIcz0OlCzng3UN847u2yo4Gk9xT70i7lQ0PiIyFW/D32T53gDWpNvGSyR6GSlx58k9RnXobEtHgpW3nDX9CNjKz2cw0ooBIpudxCrP4RFcwcfZa0vn5gRDlb/Rm8RorUJXMUQlJKkMct1Neta/iBKGnL/IDj+5GSois6tCxaTVtKfgjfxCigFnITxaSkrgBnKqBB6wkpPI0egbbWlYXcNiH2v7XDJXXsATuGazF3LWsGTiPz+CuY1wSWwM2YQzIMafpyQ4y6qlREMa8v7WV9OUefmS4P0Vj',
+           type => 'ssh-rsa',
+           require => User['dmichelotto']
+  }
+
   exec { 'enable-wheel-sudoers':
     command => "/bin/sed -i 's,#\s%wheel.*NOPASSWD: ALL,%wheel\t\tALL=(ALL)\tNOPASSWD: ALL,g' /etc/sudoers"
   }
