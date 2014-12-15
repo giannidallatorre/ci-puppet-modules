@@ -4,25 +4,19 @@ class puppet-docker {
     centos, Scientific: { $is_redhat = "true" }
     default: { fail("Unrecognized operating system for puppet-docker module.") }
   }
-  
+
   case $lsbmajdistrelease {
     5: { warning("docker is not available on centos/SL 5!") }
-    6: { 
-  
-        package { 'docker-io':
-          ensure  => latest 
-        }
+    6: {
 
-        file { "/etc/sysconfig/docker":
-          ensure  => "present",
-          content => 'other_args="--exec-driver=lxc"',
-          require => Package['docker-io']
-        }
+      package { 'docker-io':
+        ensure  => latest
+      }
 
-        service { 'docker':
-          ensure => running,
-          require => File['/etc/sysconfig/docker']
-        }
+      service { 'docker':
+        ensure => running,
+        require => Package['docker-io']
+      }
     }
   }
 }
