@@ -1,29 +1,15 @@
 #
 # == Class: puppet-voms::install-clients
-# Install voms-clients package and sets up a few directories.
+# Install voms-clients package.
 # 
 class puppet-voms::install-clients {
 
-  require puppet-emi3-release
-  require puppet-egi-trust-anchors
+  require puppet-test-vos
 
-
-  file{'/etc/grid-security/vomsdir':
-    ensure  => directory,
-    owner   => root,
-    group   => root,
-    mode    => 0755,
-    purge   => true,
-    recurse => true
-  }
-
-  file{'/etc/vomses':
-    ensure  => directory,
-    owner   => root,
-    group   => root,
-    mode    => 0755,
-    purge   => true,
-    recurse => true
+  package { "install-voms-clients3": 
+    name  => 'voms-clients3',
+    ensure  => latest, 
+    require => Class["puppet-emi3-release"]
   }
 
 }

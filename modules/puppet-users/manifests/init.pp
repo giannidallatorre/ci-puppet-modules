@@ -39,6 +39,20 @@ class puppet-users{
          ensure => 'present',
          groups => ['wheel']
   }
+  
+  user { 'ronchieri':
+    name => 'ronchieri',
+         ensure => 'present',
+         groups => ['wheel']
+  }
+
+  ssh_authorized_key { 'ronchieri-key':
+    ensure => 'present',
+           user => 'ronchieri',
+           key => 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC4rkZbaivbN1f/X3JW75ASh4xd4ZuUy3Q8FCQlqRYc8g/CTSCCqoFTAOVUHWsdV/HmnGVf0YbweZNGgFXEEE7C7TF2gxfvcRFouEEcUnV7woyp6Ik/AWRqbXDO7jgqJjDDea8UysPe43cPkQHNbJY5Uw+qKWKQwrhb0nGcC8BLBdDrYh4ZTnpDJCx5qJGOv2nTd9fK45cqrDJyYUltqu6u2pGryh5nSDVgXtpdYe6DkUaQZAeYW9JE5Oo0FAwWaybjDACNsHv6POoKloKqVKn4IFZVxl0U2ogGXA4GTZ/DZC6hTCex7lLZh7rX6Tkti5ySOJkkdLEo+cH6ZdvpZZiF',
+           type => 'ssh-rsa',
+           require => User['ronchieri']
+  }
 
   ssh_authorized_key { 'ceccanti-key':
     ensure => 'present',

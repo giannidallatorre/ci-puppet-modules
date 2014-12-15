@@ -76,7 +76,7 @@ class puppet-jenkins-slave ($maven_servers_data=[], $java_version=6) {
         user { 'jenkins':
           name => 'jenkins',
           ensure => 'present',
-          group => 'docker'
+          groups => ['docker']
         }
       }
   }
