@@ -11,6 +11,11 @@ class puppet-test-ca {
     require => File['test-ca.repo']
   }
 
+  package { 'igi-test-ca-2':
+    ensure      => latest,
+    require => File['test-ca.repo']
+  }
+
   package { 'igi-test-ca-256':
     ensure      => latest,
     require => File['test-ca.repo']
