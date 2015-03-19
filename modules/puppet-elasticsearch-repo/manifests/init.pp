@@ -1,3 +1,9 @@
+# == Class: puppet-elasticsearchs-repo
+#
+# Install the elasticsearch repository.
+# 
+# === Examples
+#   include puppet-elasticsearch-repo
 class puppet-elasticsearch-repo {
 
   case $operatingsystem {
@@ -12,4 +18,3 @@ class puppet-elasticsearch-repo {
     source =>  "puppet:///modules/puppet-elasticsearch-repo/elasticsearch.repo"
   }  
 }
-
